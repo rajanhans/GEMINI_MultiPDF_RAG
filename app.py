@@ -1,5 +1,5 @@
 #Rajan Hans - Jan 08 2024
-import streamlit as streamlit
+import streamlit as st
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
@@ -13,10 +13,10 @@ from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
 
-load_dotenv()
+#load_dotenv()
 
-genai.configure(api_key = os.getenv("GOOGLE_API_KEY"))
-
+#genai.configure(api_key = os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=st.secrets["api_key"])
 # one or more pdf files can be dropped into the files sections, 
 # for each pdf file read each page add to the text string
 def get_pdf_text(pdf_docs):
@@ -124,27 +124,27 @@ def user_input(user_question):
     response = chain({"input_documents":docs, "question":user_question}, return_only_outputs=True)
 
     print(response)
-    streamlit.write("Reply:", response["output_text"])
+    st.write("Reply:", response["output_text"])
 
 
 def main():
-    streamlit.set_page_config("Rajan's Chat with Multiple PDF")
-    streamlit.header("Rajan's Multi-PDF Chat ft. Google Gemini-Pro💁")
+    st.set_page_config("Rajan's Chat with Multiple PDF")
+    st.header("Rajan's Multi-PDF Chat ft. Google Gemini-Pro💁")
 
-    user_question = streamlit.text_input("Ask a Question from the PDF Files")
+    user_question = st.text_input("Ask a Question from the PDF Files")
 
     if user_question:
         user_input(user_question)
 
-    with streamlit.sidebar:
-        streamlit.title("Menu:")
-        pdf_docs = streamlit.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
-        if streamlit.button("Submit & Process"):
-            with streamlit.spinner("Processing..."):
+    with st.sidebar:
+        st.title("Menu:")
+        pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
+        if st.button("Submit & Process"):
+            with st.spinner("Processing..."):
                 raw_text = get_pdf_text(pdf_docs)
                 text_chunks = get_text_chunks(raw_text)
                 get_vector_store(text_chunks)
-                streamlit.success("Done")
+                st.success("Done")
 
 
 
