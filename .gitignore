@@ -126,9 +126,13 @@ celerybeat.pid
 .venv
 env/
 venv/
+.venv/
 ENV/
 env.bak/
 venv.bak/
+
+#Streamlit
+.streamlit/
 
 # Spyder project settings
 .spyderproject
